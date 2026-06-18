@@ -75,14 +75,9 @@
 ## 💻 一键安装 (Quick Start)
 
 在您的 VPS 终端中执行以下命令即可（支持 Debian / Ubuntu / CentOS / Alpine）：
-
-**方式一：短链接（推荐）**
+**GitHub 原始链接**
 ```bash
-bash <(curl -sL suoha.ggff.net | tr -d '\r')
-```
-**方式二：GitHub 原始链接（备用）**
-```bash
-bash <(curl -sL [https://raw.githubusercontent.com/ttttwei/Argo-suoha/main/suoha.sh](https://raw.githubusercontent.com/ttttwei/Argo-suoha/main/suoha.sh) | tr -d '\r')
+bash <(curl -sL https://raw.githubusercontent.com/longshen2020/Argo-suoha/refs/heads/main/suoha.sh | tr -d '\r')
 ```
 **📌根据菜单选择模式**
 
