@@ -460,6 +460,7 @@ echo 3.停止服务
 echo 4.重启服务
 echo 5.卸载服务
 echo 6.查看当前v2ray链接
+echo 7.更换cf dns
 echo 0.退出
 read -p "请选择菜单(默认0): " menu
 if [ -z "\$menu" ]
@@ -527,6 +528,11 @@ elif [ \$menu == 6 ]
 then
 	clear
 	cat /opt/suoha/v2ray.txt
+elif [ \$menu == 7 ]
+then
+	echo "nameserver 1.1.1.1" > /etc/resolv.conf
+	echo "nameserver 1.0.0.1" >> /etc/resolv.conf
+
 elif [ \$menu == 0 ]
 then
 	echo 退出成功
