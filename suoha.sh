@@ -756,6 +756,8 @@ then
 	fi
 	installtunnel
 	cat /opt/suoha/v2ray.txt
+	echo "nameserver 1.1.1.1" > /etc/resolv.conf
+	echo "nameserver 1.0.0.1" >> /etc/resolv.conf
 	echo 服务安装完成,管理服务请运行命令 suoha
 elif [ $mode == 3 ]
 then
