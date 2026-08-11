@@ -160,7 +160,7 @@ then
 	rm -rf argo.log
 	clear
 	echo argo获取超时,重试中
-	./cloudflared-linux tunnel --url http://localhost:$port --no-autoupdate --edge-ip-version $ips --protocol http2 >argo.log 2>&1 &
+	./cloudflared-linux tunnel --url http://localhost:$port --no-autoupdate --edge-ip-version auto --protocol http2 >argo.log 2>&1 &
 	sleep 1
 elif [ -z "$argo" ]
 then
