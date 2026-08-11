@@ -139,7 +139,7 @@ cat>xray/config.json<<EOF
 EOF
 fi
 ./xray/xray run>/dev/null 2>&1 &
-./cloudflared-linux tunnel --url http://localhost:$port --no-autoupdate --edge-ip-version $ips --protocol http2 >argo.log 2>&1 &
+./cloudflared-linux tunnel --url http://localhost:$port --no-autoupdate --edge-ip-version auto --protocol http2 >argo.log 2>&1 &
 sleep 1
 n=0
 while true
@@ -309,9 +309,9 @@ fi
 clear
 echo 复制下面的链接,用浏览器打开并授权需要绑定的域名
 echo 在网页中授权完毕后会继续进行下一步设置
-/opt/suoha/cloudflared-linux --edge-ip-version $ips --protocol http2 tunnel login
+/opt/suoha/cloudflared-linux --edge-ip-version auto --protocol http2 tunnel login
 clear
-/opt/suoha/cloudflared-linux --edge-ip-version $ips --protocol http2 tunnel list >argo.log 2>&1
+/opt/suoha/cloudflared-linux --edge-ip-version auto --protocol http2 tunnel list >argo.log 2>&1
 echo -e ARGO TUNNEL当前已经绑定的服务如下'\n'
 sed 1,2d argo.log | awk '{print $2}'
 echo -e '\n'自定义一个完整二级域名,例如 xxx.example.com
@@ -330,7 +330,7 @@ name=$(echo $domain | awk -F\. '{print $1}')
 if [ $(sed 1,2d argo.log | awk '{print $2}' | grep -w $name | wc -l) == 0 ]
 then
 	echo 创建TUNNEL $name
-	/opt/suoha/cloudflared-linux --edge-ip-version $ips --protocol http2 tunnel create $name >argo.log 2>&1
+	/opt/suoha/cloudflared-linux --edge-ip-version auto --protocol http2 tunnel create $name >argo.log 2>&1
 	echo TUNNEL $name 创建成功
 else
 	echo TUNNEL $name 已经存在
@@ -338,18 +338,18 @@ else
 	then
 		echo /root/.cloudflared/$(sed 1,2d argo.log | awk '{print $1" "$2}' | grep -w $name | awk '{print $1}').json 文件不存在
 		echo 清理TUNNEL $name
-		/opt/suoha/cloudflared-linux --edge-ip-version $ips --protocol http2 tunnel cleanup $name >argo.log 2>&1
+		/opt/suoha/cloudflared-linux --edge-ip-version auto --protocol http2 tunnel cleanup $name >argo.log 2>&1
 		echo 删除TUNNEL $name
-		/opt/suoha/cloudflared-linux --edge-ip-version $ips --protocol http2 tunnel delete $name >argo.log 2>&1
+		/opt/suoha/cloudflared-linux --edge-ip-version auto --protocol http2 tunnel delete $name >argo.log 2>&1
 		echo 重建TUNNEL $name
-		/opt/suoha/cloudflared-linux --edge-ip-version $ips --protocol http2 tunnel create $name >argo.log 2>&1
+		/opt/suoha/cloudflared-linux --edge-ip-version auto --protocol http2 tunnel create $name >argo.log 2>&1
 	else
 		echo 清理TUNNEL $name
-		/opt/suoha/cloudflared-linux --edge-ip-version $ips --protocol http2 tunnel cleanup $name >argo.log 2>&1
+		/opt/suoha/cloudflared-linux --edge-ip-version auto --protocol http2 tunnel cleanup $name >argo.log 2>&1
 	fi
 fi
 echo 绑定 TUNNEL $name 到域名 $domain
-/opt/suoha/cloudflared-linux --edge-ip-version $ips --protocol http2 tunnel route dns --overwrite-dns $name $domain >argo.log 2>&1
+/opt/suoha/cloudflared-linux --edge-ip-version auto --protocol http2 tunnel route dns --overwrite-dns $name $domain >argo.log 2>&1
 echo $domain 绑定成功
 tunneluuid=$(cut -d= -f2 argo.log)
 if [ $protocol == 1 ]
@@ -386,7 +386,7 @@ EOF
 if [ $(grep -i PRETTY_NAME /etc/os-release | cut -d \" -f2 | awk '{print $1}') == "Alpine" ]
 then
 cat>/etc/local.d/cloudflared.start<<EOF
-/opt/suoha/cloudflared-linux --edge-ip-version $ips --protocol http2 tunnel --config /opt/suoha/config.yaml run $name &
+/opt/suoha/cloudflared-linux --edge-ip-version auto --protocol http2 tunnel --config /opt/suoha/config.yaml run $name &
 EOF
 cat>/etc/local.d/xray.start<<EOF
 /opt/suoha/xray run -config /opt/suoha/config.json &
@@ -695,17 +695,7 @@ then
 		echo 请输入正确的xray协议
 		exit
 	fi
-	read -p "请选择argo连接模式IPV4或者IPV6(输入4或6,默认4):" ips
-	if [ -z "$ips" ]
-	then
-		ips=4
-	fi
-	if [ $ips != 4 ] && [ $ips != 6 ]
-	then
-		echo 请输入正确的argo连接模式
-		exit
-	fi
-	isp=$(curl -$ips -s https://speed.cloudflare.com/meta | awk -F\" '{print $26"-"$18"-"$30}' | sed -e 's/ /_/g')
+	isp=$(curl -s https://speed.cloudflare.com/meta | awk -F\" '{print $26"-"$18"-"$30}' | sed -e 's/ /_/g')
 	if [ $(grep -i PRETTY_NAME /etc/os-release | cut -d \" -f2 | awk '{print $1}') == "Alpine" ]
 	then
 		kill -9 $(ps -ef | grep xray | grep -v grep | awk '{print $1}') >/dev/null 2>&1
@@ -728,17 +718,7 @@ then
 		echo 请输入正确的xray协议
 		exit
 	fi
-	read -p "请选择argo连接模式IPV4或者IPV6(输入4或6,默认4):" ips
-	if [ -z "$ips" ]
-	then
-		ips=4
-	fi
-	if [ $ips != 4 ] && [ $ips != 6 ]
-	then
-		echo 请输入正确的argo连接模式
-		exit
-	fi
-	isp=$(curl -$ips -s https://speed.cloudflare.com/meta | awk -F\" '{print $26"-"$18"-"$30}' | sed -e 's/ /_/g')
+	isp=$(curl -s https://speed.cloudflare.com/meta | awk -F\" '{print $26"-"$18"-"$30}' | sed -e 's/ /_/g')
 	if [ $(grep -i PRETTY_NAME /etc/os-release | cut -d \" -f2 | awk '{print $1}') == "Alpine" ]
 	then
 		kill -9 $(ps -ef | grep xray | grep -v grep | awk '{print $1}') >/dev/null 2>&1
