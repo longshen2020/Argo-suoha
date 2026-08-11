@@ -695,7 +695,7 @@ then
 		echo 请输入正确的xray协议
 		exit
 	fi
-	isp=$(curl -s https://speed.cloudflare.com/meta | awk -F\" '{print $26"-"$18"-"$30}' | sed -e 's/ /_/g')
+	isp=$(curl -s https://speed.cloudflare.com/meta | awk -F'"' '{for(i=2;i<=NF;i+=2){if($i=="country")c=$(i+2);if($i=="asOrganization")a=$(i+2)}}END{print c"+"a}' | sed 's/ /_/g')
 	if [ $(grep -i PRETTY_NAME /etc/os-release | cut -d \" -f2 | awk '{print $1}') == "Alpine" ]
 	then
 		kill -9 $(ps -ef | grep xray | grep -v grep | awk '{print $1}') >/dev/null 2>&1
@@ -718,7 +718,7 @@ then
 		echo 请输入正确的xray协议
 		exit
 	fi
-	isp=$(curl -s https://speed.cloudflare.com/meta | awk -F\" '{print $26"-"$18"-"$30}' | sed -e 's/ /_/g')
+	isp=$(curl -s https://speed.cloudflare.com/meta | awk -F'"' '{for(i=2;i<=NF;i+=2){if($i=="country")c=$(i+2);if($i=="asOrganization")a=$(i+2)}}END{print c"+"a}' | sed 's/ /_/g')
 	if [ $(grep -i PRETTY_NAME /etc/os-release | cut -d \" -f2 | awk '{print $1}') == "Alpine" ]
 	then
 		kill -9 $(ps -ef | grep xray | grep -v grep | awk '{print $1}') >/dev/null 2>&1
