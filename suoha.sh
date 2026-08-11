@@ -405,7 +405,7 @@ After=network.target
 [Service]
 TimeoutStartSec=0
 Type=simple
-ExecStart=/opt/suoha/cloudflared-linux --edge-ip-version $ips --protocol http2 tunnel --config /opt/suoha/config.yaml run $name
+ExecStart=/opt/suoha/cloudflared-linux --edge-ip-version auto --protocol http2 tunnel --config /opt/suoha/config.yaml run $name
 Restart=on-failure
 RestartSec=5s
 
