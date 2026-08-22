@@ -192,9 +192,9 @@ fi
 if [ $protocol == 2 ]
 then
 	echo -e vless链接已经生成, cf.877774.xyz 可替换为CF优选IP'\n' > v2ray.txt
-	echo 'vless://'$uuid'@www.visa.com.sg:443?encryption=none&security=tls&sni='$domain'&type=ws&host='$argo'&path='$urlpath'#'$(echo $isp | sed -e 's/_/%20/g' -e 's/,/%2C/g')'_tls' >> v2ray.txt
+	echo 'vless://'$uuid'@cf.877774.xyz:443?encryption=none&security=tls&sni='$domain'&type=ws&host='$argo'&path='$urlpath'#'$(echo $isp | sed -e 's/_/%20/g' -e 's/,/%2C/g')'_tls' >> v2ray.txt
 	echo -e '\n'端口 443 可改为 2053 2083 2087 2096 8443'\n' >> v2ray.txt
-	echo 'vless://'$uuid'@www.visa.com.sg:80?encryption=none&security=none&type=ws&host='$argo'&path='$urlpath'#'$(echo $isp | sed -e 's/_/%20/g' -e 's/,/%2C/g')'' >> v2ray.txt
+	echo 'vless://'$uuid'@cf.877774.xyz:80?encryption=none&security=none&type=ws&host='$argo'&path='$urlpath'#'$(echo $isp | sed -e 's/_/%20/g' -e 's/,/%2C/g')'' >> v2ray.txt
 	echo -e '\n'端口 80 可改为 8080 8880 2052 2082 2086 2095 >> v2ray.txt
 fi
 rm -rf argo.log
