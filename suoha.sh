@@ -385,9 +385,14 @@ ingress:
 EOF
 if [ $(grep -i PRETTY_NAME /etc/os-release | cut -d \" -f2 | awk '{print $1}') == "Alpine" ]
 then
-cat>/etc/local.d/cloudflared.start<<EOF
-/opt/suoha/cloudflared-linux --edge-ip-version auto --protocol http2 tunnel --config /opt/suoha/config.yaml run $name &
+cat > /etc/local.d/cloudflared.start <<EOF
+#!/bin/sh
+/opt/suoha/cloudflared-linux --edge-ip-version auto --protocol http2 --no-prechecks tunnel --config /opt/suoha/config.yaml run $name >> /var/log/cloudflared.log 2>&1 &
 EOF
+chmod +x /etc/local.d/cloudflared.start
+(crontab -l 2>/dev/null | grep -v -E "cloudflared|xray"; \
+ echo "* * * * * pgrep -f 'cloudflared.*run $name' || /etc/local.d/cloudflared.start"; \
+ echo "* * * * * pgrep -f 'xray run' || /etc/local.d/xray.start") | crontab -
 cat>/etc/local.d/xray.start<<EOF
 /opt/suoha/xray run -config /opt/suoha/config.json &
 EOF
